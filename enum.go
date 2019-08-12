@@ -24,9 +24,10 @@ import (
 type Enum uint
 
 var (
-	names = make(map[Enum]string)
-	enums = make(map[string]Enum)
-	next  = Enum(0)
+	names          = make(map[Enum]string)
+	enums          = make(map[string]Enum)
+	lowerCaseEnums = make(map[string]Enum)
+	next           = Enum(0)
 )
 
 // New returns a new enum within the scope.
@@ -38,6 +39,7 @@ func New(name string) Enum {
 	enum := next
 	names[enum] = name
 	enums[name] = enum
+	lowerCaseEnums[strings.ToLower(name)] = enum
 	next++
 	return enum
 }
@@ -45,6 +47,15 @@ func New(name string) Enum {
 // Parse parses an enum from the provided string.
 func Parse(raw string) (Enum, error) {
 	enum, ok := enums[strings.TrimSpace(raw)]
+	if !ok {
+		return 0, ErrNoSuchEnum
+	}
+	return enum, nil
+}
+
+// ParseIgnoreCase parses an enum from the provided string ignoring the case.
+func ParseIgnoreCase(raw string) (Enum, error) {
+	enum, ok := lowerCaseEnums[strings.ToLower(strings.TrimSpace(raw))]
 	if !ok {
 		return 0, ErrNoSuchEnum
 	}

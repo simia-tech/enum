@@ -24,7 +24,7 @@ func (e Enum) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements json.Unmarshaler.
 func (e *Enum) UnmarshalJSON(data []byte) error {
 	data = bytes.Trim(data, `" `)
-	enum, err := Parse(string(data))
+	enum, err := ParseIgnoreCase(string(data))
 	if err != nil {
 		return err
 	}
