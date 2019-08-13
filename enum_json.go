@@ -14,7 +14,9 @@
 
 package enum
 
-import "bytes"
+import (
+	"bytes"
+)
 
 // MarshalJSON implements json.Marshaler.
 func (e Enum) MarshalJSON() ([]byte, error) {
@@ -24,10 +26,15 @@ func (e Enum) MarshalJSON() ([]byte, error) {
 // UnmarshalJSON implements json.Unmarshaler.
 func (e *Enum) UnmarshalJSON(data []byte) error {
 	data = bytes.Trim(data, `" `)
+	if len(data) == 0 || bytes.Equal(data, []byte(`null`)) {
+		return nil
+	}
+
 	enum, err := ParseIgnoreCase(string(data))
 	if err != nil {
 		return err
 	}
 	*e = enum
+
 	return nil
 }
