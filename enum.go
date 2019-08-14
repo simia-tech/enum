@@ -15,7 +15,6 @@
 package enum
 
 import (
-	"fmt"
 	"strconv"
 	"strings"
 )
@@ -32,8 +31,8 @@ var (
 
 // New returns a new enum within the scope.
 func New(name string) Enum {
-	if _, ok := enums[name]; ok {
-		panic(fmt.Sprintf("enum name [%s] already taken", name))
+	if enum, ok := enums[name]; ok {
+		return enum
 	}
 
 	enum := next
